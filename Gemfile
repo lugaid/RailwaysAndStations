@@ -41,6 +41,10 @@ group :production do
   # Use postgres in production
   gem 'pg'
 end
+
+gem 'simple_form'
+
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
