@@ -1,0 +1,17 @@
+<%= simple_form_for(@railway, defaults: { input_html: { class: 'form-horizontal' } }) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :abreviation %>
+    <%= f.input :description %>
+  </div>
+  
+  <%= f.simple_fields_for :points do |builder| %>
+    <%= render "points_fields", :f => builder %>
+  <% end %>
+  
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

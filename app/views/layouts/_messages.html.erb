@@ -1,0 +1,19 @@
+<%
+  flash.each do |key, value|
+    if (key.eql? :notice)
+%>
+    <div class="alert alert-success fade in" data-alert="alert">
+    	<a class="close" data-dismiss='alert' href="#">×</a>
+    	<p><%= value %></p>
+  	</div>
+<%
+    else
+%>
+    <div class="alert alert-danger fade in" data-alert="alert">
+    	<a class="close" data-dismiss='alert' href="#">×</a>
+    	<p><%= value %></p>
+  	</div>
+<%
+    end
+  end
+%>

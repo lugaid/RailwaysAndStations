@@ -1,0 +1,18 @@
+<h1>Listing railways</h1>
+
+<table id="railways" class="display" data-source="<%= railways_url(format: "json") %>">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Abreviation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Railway', new_railway_path %>

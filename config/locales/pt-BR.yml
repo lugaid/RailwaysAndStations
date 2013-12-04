@@ -20,3 +20,5 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 pt-BR:
   app_name: "Ferrovias & Estações"
+  railways: "Ferrovias"
+  
