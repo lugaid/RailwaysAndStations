@@ -18,7 +18,7 @@ class RailwaysControllerTest < ActionController::TestCase
 
   test "should create railway" do
     assert_difference('Railway.count') do
-      post :create, railway: { abreviation: @railway.abreviation, description: @railway.description, name: @railway.name }
+      post :create, railway: { abbreviation: @railway.abbreviation, description: @railway.description, name: @railway.name }
     end
 
     assert_redirected_to railway_path(assigns(:railway))
@@ -35,7 +35,7 @@ class RailwaysControllerTest < ActionController::TestCase
   end
 
   test "should update railway" do
-    patch :update, id: @railway, railway: { abreviation: @railway.abreviation, description: @railway.description, name: @railway.name }
+    patch :update, id: @railway, railway: { abbreviation: @railway.abbreviation, description: @railway.description, name: @railway.name }
     assert_redirected_to railway_path(assigns(:railway))
   end
 

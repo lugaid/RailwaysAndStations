@@ -1,1 +1,1 @@
-json.extract! @railway, :name, :abreviation, :description, :created_at, :updated_at
+json.extract! @railway, :name, :abbreviation, :description, :created_at, :updated_at

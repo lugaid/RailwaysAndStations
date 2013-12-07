@@ -18,10 +18,6 @@ class RailwaysController < ApplicationController
   # GET /railways/new
   def new
     @railway = Railway.new
-    
-    3.times do
-      @railway.points.build
-    end
   end
 
   # GET /railways/1/edit
@@ -31,7 +27,7 @@ class RailwaysController < ApplicationController
   # POST /railways
   # POST /railways.json
   def create
-    @railway = Railway.new(railway_params)
+    @railway = Railway.new(railway_params_with_ids)
 
     respond_to do |format|
       if @railway.save
@@ -48,7 +44,7 @@ class RailwaysController < ApplicationController
   # PATCH/PUT /railways/1.json
   def update
     respond_to do |format|
-      if @railway.update(railway_params)
+      if @railway.update(railway_params_with_ids)
         format.html { redirect_to @railway, notice: 'Railway was successfully updated.' }
         format.json { head :no_content }
       else
@@ -76,6 +72,15 @@ class RailwaysController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def railway_params
-      params.require(:railway).permit(:name, :abreviation, :description)
+      params.require(:railway).permit(:name, :abbreviation, :description, 
+      :branches_attributes => [:description, 
+        :points_attributes => [:latitude, :longitude]])
+    end
+    
+    # Pemit id also to delete and update
+    def railway_params_with_ids
+      params.require(:railway).permit(:name, :abbreviation, :description, 
+      :branches_attributes => [:id, :description, :_destroy,
+        :points_attributes => [:id, :latitude, :longitude, :_destroy]])
     end
 end

@@ -11,21 +11,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131204184137) do
+ActiveRecord::Schema.define(version: 20131206120117) do
 
-  create_table "points", force: true do |t|
-    t.float    "latitude"
-    t.float    "longitude"
+  create_table "branches", force: true do |t|
+    t.string   "description"
     t.integer  "railway_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "points", ["railway_id"], name: "index_points_on_railway_id"
+  add_index "branches", ["railway_id"], name: "index_branches_on_railway_id"
+
+  create_table "points", force: true do |t|
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "branch_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "points", ["branch_id"], name: "index_points_on_branch_id"
 
   create_table "railways", force: true do |t|
     t.string   "name"
-    t.string   "abreviation"
+    t.string   "abbreviation"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"

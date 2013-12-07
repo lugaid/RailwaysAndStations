@@ -14,3 +14,16 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap.min
+
+function remove_row(link) {
+  $(link).prev("input[type=hidden]").val("true");
+  $(link).parent('td').parent('tr').hide();
+}
+
+function add_fields(link, association, content, table_id) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g");
+  var new_content = content.replace(regexp, new_id);
+  var table = '#' + table_id + ' tr:last';
+  $(table).after(new_content);
+}

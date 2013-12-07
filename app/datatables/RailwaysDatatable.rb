@@ -22,7 +22,7 @@ private
     railways.map do |railway|
       [
         h(railway.name),
-        h(railway.abreviation),
+        h(railway.abbreviation),
         h(railway.description)
       ]
     end
@@ -36,7 +36,7 @@ private
     railways = Railway.order("#{sort_column} #{sort_direction}")
     railways = railways.page(page).per_page(per_page)
     if params[:sSearch].present?
-      railways = railways.where("name like :search or abreviation like :search or abreviation like :description", search: "%#{params[:sSearch]}%")
+      railways = railways.where("name like :search or abbreviation like :search or abbreviation like :description", search: "%#{params[:sSearch]}%")
     end
     railways
   end
@@ -50,7 +50,7 @@ private
   end
 
   def sort_column
-    columns = %w[name abreviation description]
+    columns = %w[name abbreviation description]
     columns[params[:iSortCol_0].to_i]
   end
 

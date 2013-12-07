@@ -1,17 +1,39 @@
 <%= simple_form_for(@railway, defaults: { input_html: { class: 'form-horizontal' } }) do |f| %>
+
   <%= f.error_notification %>
 
   <div class="form-inputs">
     <%= f.input :name %>
-    <%= f.input :abreviation %>
+    <%= f.input :abbreviation %>
     <%= f.input :description %>
   </div>
+
+  <hr>
+  <h3><%= t 'activerecord.models.branch.other' %></h3>
   
-  <%= f.simple_fields_for :points do |builder| %>
-    <%= render "points_fields", :f => builder %>
-  <% end %>
-  
+  <%= link_to_add_row t('helpers.submit.create', model: t('activerecord.models.branch.one')), f, :branches, :branches_table %>
+
+  <table id="branches_table" class="table table-condensed table-hover table-striped table-bordered table-borderless">
+  	<thead>
+	  	<tr>
+	      <th><%= t 'activerecord.attributes.branch.description' %></th>
+	      <th></th>
+	    </tr>
+  	</thead>
+    <tbody>
+    <%= f.simple_fields_for :branches do |builder| %>
+  	    <%= render "branch_fields", :f => builder %>
+    <% end %>
+    </tbody>
+  </table>
+
+  <div style="width: 100%; height: 100%" id="map_canvas"></div>
+
   <div class="form-actions">
     <%= f.button :submit %>
   </div>
 <% end %>
+
+<% content_for :finalize do
+	javascript_include_tag "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false", 'railways', 'md5'
+end %>
