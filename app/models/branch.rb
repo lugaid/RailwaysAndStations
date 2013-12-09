@@ -4,4 +4,5 @@ class Branch < ActiveRecord::Base
   accepts_nested_attributes_for :points, :allow_destroy => true
   
   validates_presence_of :description
+  validates_presence_of :color
 end

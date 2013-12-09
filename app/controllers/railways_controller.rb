@@ -73,14 +73,14 @@ class RailwaysController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def railway_params
       params.require(:railway).permit(:name, :abbreviation, :description, 
-      :branches_attributes => [:description, 
+      :branches_attributes => [:description, :color,
         :points_attributes => [:latitude, :longitude]])
     end
     
     # Pemit id also to delete and update
     def railway_params_with_ids
       params.require(:railway).permit(:name, :abbreviation, :description, 
-      :branches_attributes => [:id, :description, :_destroy,
+      :branches_attributes => [:id, :description, :color, :_destroy,
         :points_attributes => [:id, :latitude, :longitude, :_destroy]])
     end
 end

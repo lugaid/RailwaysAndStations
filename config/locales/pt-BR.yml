@@ -255,3 +255,4 @@ pt-BR:
         description: "Descrição"
       branch:
         description: "Descrição"
+        color: "Cor"

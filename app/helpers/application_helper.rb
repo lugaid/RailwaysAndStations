@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def link_to_remove_row(name, f, html_options={})
+  def link_to_destroy_row(name, f, html_options={})
     f.hidden_field(:_destroy) + link_to_function(name, "remove_row(this)", html_options)
   end
   
