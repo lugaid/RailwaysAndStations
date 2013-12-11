@@ -1,11 +1,4 @@
-<% if (f.object == nil || f.object.id == nil || f.object.id == 0) %>
-<%= f.hidden_field '_destroy', 'data-pointId' => 'new_points', 'data-branchId' => 'new_branch'%>
-<%= f.hidden_field :id, 'data-pointId' => 'new_points', 'data-branchId' => 'new_branch' %>
-<%= f.hidden_field :latitude, 'data-pointId' => 'new_points', :value => 'new_latitude', 'data-branchId' => 'new_branch' %>
-<%= f.hidden_field :longitude, 'data-pointId' => 'new_points', :value => 'new_longitude', 'data-branchId' => 'new_branch' %>
-<% else %>
-<%= f.hidden_field '_destroy', 'data-pointId' => f.object.id, 'data-branchId' => f.object.branch.id %>
-<%= f.hidden_field :id, 'data-pointId' => f.object.id, 'data-branchId' => f.object.branch.id %>
-<%= f.hidden_field :latitude, 'data-pointId' => f.object.id, 'data-branchId' => f.object.branch.id %>
-<%= f.hidden_field :longitude, 'data-pointId' => f.object.id, 'data-branchId' => f.object.branch.id %>
-<% end %>
+<%= f.hidden_field '_destroy', 'data-pointIdx' => f.options[:child_index], 'data-branchIdx' => f.options[:branchIdx] %>
+<%= f.hidden_field :id, 'data-pointIdx' => f.options[:child_index], 'data-branchIdx' => f.options[:branchIdx] %>
+<%= f.hidden_field :latitude, 'data-pointIdx' => f.options[:child_index], 'data-branchIdx' => f.options[:branchIdx] %>
+<%= f.hidden_field :longitude, 'data-pointIdx' => f.options[:child_index], 'data-branchIdx' => f.options[:branchIdx] %>

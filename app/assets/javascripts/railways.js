@@ -25,7 +25,6 @@ var imageHover = new google.maps.MarkerImage(
 );
 
 $(document).ready(function() {
-
 	//initialize pick color
 	$(".pick-a-color").each(function () {
 		$(this).pickAColor({
@@ -55,7 +54,7 @@ $(document).ready(function() {
 	    initialize();
 	});
 });
-
+	
 function initialize() {
   var mapOptions = {zoom: 8,
   	                center: initialLocation};
@@ -75,23 +74,53 @@ function initialize() {
 
 function initializePolylines() {
 	$("input[name*='[points_attributes]'][name$='[id]']").each(function(){
-		add_or_reuse_polyline($(this).attr('data-branchId'));
+		add_or_reuse_polyline($(this).attr('data-branchIdx'));
 		
-		var pointId = $(this).attr('data-pointId');
+		var pointIdx = $(this).attr('data-pointIdx');
 		
-		var selector = "input[data-branchId='" + $(this).attr('data-branchId') + "'][data-pointId='" + pointId + "'][name$='[latitude]']";
+		var selector = "input[data-branchIdx='" + $(this).attr('data-branchIdx') + "'][data-pointIdx='" + pointIdx + "'][name$='[_destroy]']";
 		var latitude = $(selector).val();
 		
-		selector = "input[data-branchId='" + $(this).attr('data-branchId') + "'][data-pointId='" + pointId + "'][name$='[longitude]']";
-		var longitude = $(selector).val();
-		
-		var point = new google.maps.LatLng(latitude, longitude);
-		
-		currentPolyline.getPath().insertAt(currentPolyline.getPath().length, point);
-		add_marker(point, pointId);
+		//just add the point if _destroy is not setec
+		if($(selector) == undefined || $(selector).val() == 'false') {
+			selector = "input[data-branchIdx='" + $(this).attr('data-branchIdx') + "'][data-pointIdx='" + pointIdx + "'][name$='[latitude]']";
+			var latitude = $(selector).val();
+			
+			selector = "input[data-branchIdx='" + $(this).attr('data-branchIdx') + "'][data-pointIdx='" + pointIdx + "'][name$='[longitude]']";
+			var longitude = $(selector).val();
+			
+			var point = new google.maps.LatLng(latitude, longitude);
+			
+			currentPolyline.getPath().insertAt(currentPolyline.getPath().length, point);
+			add_marker(point, pointIdx);
+		}
 	});
 	
 	stop_edit_branch();
+	
+	fitBounds();
+}
+
+function fitBounds() {
+	if(polyLines.length > 0) {
+		var bounds = new google.maps.LatLngBounds();
+		
+		//for each polylines 
+		for(i=0; i < polyLines.length;i++) {
+			if(polyLines[i].getPath().length > 0) {
+
+				//for each pointh in the path
+				for(u=0;u < polyLines[i].getPath().length;u++) {
+					bounds.extend(polyLines[i].getPath().getAt(u));
+				}
+			}
+		}
+
+		//if the bounds was filled fit the bounds
+		if(!bounds.isEmpty()) {
+			map.fitBounds(bounds);
+		}
+	}
 }
 
 function geoLocalizationSucess(position) {
@@ -122,9 +151,9 @@ function edit_branch(link, association, content) {
   	currentContent = content;
   	currentLink = link;
   	
-  	var branchId = $(link).attr('data-branchId');
+  	var branchIdx = $(link).attr('data-branchIdx');
 
-	add_or_reuse_polyline(branchId);
+	add_or_reuse_polyline(branchIdx);
 }
 
 function stop_edit_branch() {
@@ -144,10 +173,10 @@ function destroy_branch(link) {
 	//hide line of the table
 	remove_row(link);
 	
-	var branchId = $(link).attr('data-branchId');
+	var branchIdx = $(link).attr('data-branchIdx');
 	
 	//search for one polyline to the current branch
-	search_by_branchId(branchId);
+	search_by_branchIdx(branchIdx);
 	
 	//if found one polyline remove this polyline from form, and from array of polylines and remove markers
 	if(currentPolyline  != null) {
@@ -168,15 +197,15 @@ function destroy_branch(link) {
 	}
 }
 
-function add_or_reuse_polyline(branchId) {
+function add_or_reuse_polyline(branchIdx) {
 	//search for one polyline to the current branch
-	search_by_branchId(branchId);
+	search_by_branchIdx(branchIdx);
 	
 	//if not found one polyline for the current branch create a new one.
 	if(currentPolyline  == null) {
 		var polyPoints = new google.maps.MVCArray();
 		
-		var selector = "input[data-branchId='" + branchId + "'][name$='[color]']";
+		var selector = "input[data-branchIdx='" + branchIdx + "'][name$='[color]']";
 		var color = $(selector).val();
 
 		var polyOptions = {
@@ -189,7 +218,7 @@ function add_or_reuse_polyline(branchId) {
 	    
 	    currentPolyline.setMap(map);
 	    
-	    currentPolyline.branchId = branchId;
+	    currentPolyline.branchIdx = branchIdx;
 	    
 	    //add marker list
 	    currentPolyline.markers = new Array();
@@ -205,13 +234,13 @@ function add_or_reuse_polyline(branchId) {
 	}
 }
 
-function search_by_branchId(branchId){
+function search_by_branchIdx(branchIdx){
 	//stop editing
 	stop_edit_branch();
 	
 	if(polyLines.length > 0) {
 		for(i=0; i < polyLines.length;i++) {
-			if(polyLines[i].branchId == branchId) {
+			if(polyLines[i].branchIdx == branchIdx) {
 				currentPolyline = polyLines[i];
 			}
 		}
@@ -220,29 +249,29 @@ function search_by_branchId(branchId){
 
 function addLatLng(point) {
 	if(currentPolyline != null) {
-		var pointId = new Date().getTime();
+		var pointIdx = new Date().getTime();
 		
 		//define point id
 	  	var regexp = new RegExp("new_points", "g");
-	  	var new_content = currentContent.replace(regexp, pointId);
-	  	
-	  	//define latitude
-	  	regexp = new RegExp("new_latitude", "g");
-	  	new_content = new_content.replace(regexp, point.latLng.pb);
-	  	
-	  	//define longitude
-	  	regexp = new RegExp("new_longitude", "g");
-	  	new_content = new_content.replace(regexp, point.latLng.qb);
+	  	var new_content = currentContent.replace(regexp, pointIdx);
 		
 	  	//append fields to form
 		$(currentLink).closest('form').append(new_content);
 		
+    	//latitude
+    	var selector = "input[data-branchIdx='" + currentPolyline.branchIdx + "'][data-pointIdx='" + pointIdx + "'][name$='[latitude]']";
+    	$(selector).val(point.latLng.lat());
+    	
+    	//longitude
+    	selector = "input[data-branchIdx='" + currentPolyline.branchIdx + "'][data-pointIdx='" + pointIdx + "'][name$='[longitude]']";
+    	$(selector).val(point.latLng.lng());
+		
 		currentPolyline.getPath().insertAt(currentPolyline.getPath().length, point.latLng);
-		add_marker(point.latLng, pointId);
+		add_marker(point.latLng, pointIdx);
 	}
 }
 
-function add_marker(point, pointId) {
+function add_marker(point, pointIdx) {
 	var marker = new google.maps.Marker({
     	position: point,
     	map: map,
@@ -251,7 +280,7 @@ function add_marker(point, pointId) {
     	draggable: true,
     	reference_polyline: currentPolyline,
     	reference_position: point,
-    	reference_pointId: pointId
+    	reference_pointIdx: pointIdx
     });
     
     //add marker to markers list of polyline
@@ -269,18 +298,19 @@ function add_marker(point, pointId) {
     
     //change polyline when drag the marker
     google.maps.event.addListener(marker, "drag", function() {
+    	var referencePolyline = marker.reference_polyline;
     	var path = marker.reference_polyline.getPath();
 
     	path.setAt(path.indexOf(marker.reference_position), marker.getPosition());
     	
     	//set new position to input
     	//latitude
-    	var selector = "input[data-pointId='" + marker.reference_pointId + "'][name$='[latitude]']";
-    	$(selector).val(marker.getPosition().pb);
+    	var selector = "input[data-branchIdx='" + referencePolyline.branchIdx + "'][data-pointIdx='" + marker.reference_pointIdx + "'][name$='[latitude]']";
+    	$(selector).val(marker.getPosition().lat());
     	
     	//longitude
-    	selector = "input[data-pointId='" + marker.reference_pointId + "'][name$='[longitude]']";
-    	$(selector).val(marker.getPosition().qb);
+    	selector = "input[data-branchIdx='" + referencePolyline.branchIdx + "'][data-pointIdx='" + marker.reference_pointIdx + "'][name$='[longitude]']";
+    	$(selector).val(marker.getPosition().lng());
     	
     	//set new reference position
     	marker.reference_position = marker.getPosition();
@@ -293,12 +323,13 @@ function add_marker(point, pointId) {
 }
 
 function remove_marker(marker) {
+	var referencePolyline = marker.reference_polyline;
     var path = marker.reference_polyline.getPath();
 
     path.removeAt(path.indexOf(marker.reference_position));
 
 	//set delete true to hidden _destroy field
-	var selector = "input[data-pointId='" + marker.reference_pointId + "'][name$='[_destroy]']";
+	var selector = "input[data-branchIdx='" + referencePolyline.branchIdx + "'][data-pointIdx='" + marker.reference_pointIdx + "'][name$='[_destroy]']";
 	$(selector).val(true);
 	
 	//remove marker from map
@@ -309,8 +340,8 @@ function remove_marker(marker) {
 }
 
 function change_color(color) {
-   	var branchId = $(color).attr('data-branchId');
-	search_by_branchId(branchId);
+   	var branchIdx = $(color).attr('data-branchIdx');
+	search_by_branchIdx(branchIdx);
 	
 	if(currentPolyline != null) {
 		var color = "#" + $(color).val().toString().toUpperCase();

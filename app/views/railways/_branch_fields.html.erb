@@ -1,16 +1,16 @@
 <tr>
 	<td>
-		<%= f.hidden_field :id, 'data-branchId' => (f.object.id != nil ? f.object.id : 'new_branches') %>
-		<%= f.simple_fields_for :points do |builder| %>
+		<%= f.hidden_field :id, 'data-branchIdx' => f.options[:child_index] %>
+		<%= f.simple_fields_for :points, :branchIdx => f.options[:child_index] do |builder| %>
 			<%= render "point_fields", :f => builder %>
 		<% end %>
-		<%= f.input :description, :label => false, 'data-branchId' => (f.object.id != nil ? f.object.id : 'new_branches')  %>
+		<%= f.input :description, :label => false, 'data-branchIdx' => f.options[:child_index]  %>
 	</td>
 	<td>
-		<%= f.input_field :color, :value => (f.object.color.blank? ? 'FF0000' : f.object.color), :class => 'input-mini pick-a-color', 'data-branchId' => (f.object.id != nil ? f.object.id : 'new_branches')  %>
+		<%= f.input_field :color, :value => (f.object.color.blank? ? 'FF0000' : f.object.color), :class => 'input-mini pick-a-color', 'data-branchIdx' => f.options[:child_index]  %>
 	</td>
 	<td>
-	<%= link_to_edit_branch t('custom.models.branch.edit_track'), f, :points, :class => "btn btn-mini btn-primary", 'data-branchId' => (f.object.id != nil ? f.object.id : 'new_branches') %>
-	<%= link_to_destroy_branch t('helpers.submit.delete', model: t('activerecord.models.branch.one')), f, :class => "btn btn-mini btn-danger", 'data-branchId' => (f.object.id != nil ? f.object.id : 'new_branches') %>
+	<%= link_to_edit_branch t('custom.models.branch.edit_track'), f, :points, :class => "btn btn-mini btn-primary", 'data-branchIdx' => f.options[:child_index] %>
+	<%= link_to_destroy_branch t('helpers.submit.delete', model: t('activerecord.models.branch.one')), f, :class => "btn btn-mini btn-danger", 'data-branchIdx' => f.options[:child_index] %>
 	</td>
 </tr>
