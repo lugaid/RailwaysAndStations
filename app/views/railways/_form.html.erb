@@ -15,7 +15,7 @@
       <h3><%= t 'activerecord.models.branch.other' %></h3>
     </div>
     <div class="span2">
-      <%= link_to_add_branch t('helpers.submit.create', model: t('activerecord.models.branch.one')), f, :branches, :branches_table %>
+      <%= link_to_add_row t('helpers.submit.create', model: t('activerecord.models.branch.one')), f, :branches, :branches_table %>
     </div>
   </div>
   
@@ -41,6 +41,7 @@
   </div>
 <% end %>
 
-<% content_for :finalize do
-	javascript_include_tag 'railways'
-end %>
+<% content_for :finalize do %>
+  <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false" %>
+  <%= javascript_include_tag "railways" %>
+<% end %>

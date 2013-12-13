@@ -10,7 +10,7 @@
 		<%= f.input_field :color, :value => (f.object.color.blank? ? 'FF0000' : f.object.color), :class => 'input-mini pick-a-color', 'data-branchIdx' => f.options[:child_index]  %>
 	</td>
 	<td>
-	<%= link_to_edit_branch t('custom.models.branch.edit_track'), f, :points, :class => "btn btn-mini btn-primary", 'data-branchIdx' => f.options[:child_index] %>
-	<%= link_to_destroy_branch t('helpers.submit.delete', model: t('activerecord.models.branch.one')), f, :class => "btn btn-mini btn-danger", 'data-branchIdx' => f.options[:child_index] %>
+	<%= link_to_edit_branch_track t('custom.models.branch.edit_track'), f, :points, :class => "btn btn-mini btn-primary", 'data-branchIdx' => f.options[:child_index] %>
+	<%= link_to_destroy_row t('helpers.submit.delete', model: t('activerecord.models.branch.one')), f, :class => "btn btn-mini btn-danger", 'data-branchIdx' => f.options[:child_index] %>
 	</td>
 </tr>
